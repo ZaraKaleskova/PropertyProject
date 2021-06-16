@@ -4,17 +4,29 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import rootReducer from './reducers';
+import { fetchBuildings } from './actions/building.actions';
 
-import {BrowserRouter as Router} from 'react-router-dom';
-import {createBrowserHistory} from 'history';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 
-export const history = createBrowserHistory({forceRefresh: true});
+const store = createStore(rootReducer, applyMiddleware(thunk));
+
+store.dispatch(fetchBuildings());
+
+export const history = createBrowserHistory({ forceRefresh: true });
 
 
 ReactDOM.render(
-  <Router>
-    <App />
-  </Router>,
+  <Provider store={store}>
+    <Router>
+      <App />
+    </Router>
+  </Provider>
+  ,
   document.getElementById('root')
 );
 

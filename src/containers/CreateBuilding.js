@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {createBuilding} from '../actions/building.actions';
+import {connect} from 'redux-redux';
 import './CreateBuilding.css';
 
 class CreateBuilding extends Component {
@@ -88,4 +90,16 @@ class CreateBuilding extends Component {
     }
 }
 
-export default CreateBuilding;
+const mapStateToProps = (state) => {
+    return {
+
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateBuilding);
