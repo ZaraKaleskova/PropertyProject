@@ -13,8 +13,52 @@ import{
     FETCH_BUILDING_SUCCESS
 } from './types';
 import axios from 'axios';
+import {history} from '../index';
 
-const url = 'http://localhost:3000/index';
+const url = 'http://localhost:3000/buildings';
+
+export const createBuildingSuccess = (data) => {
+    return {
+        type: ADD_BUILDING_SUCCESS,
+        payload: data,
+    }
+};
+
+export const createBuildingError = (data) => {
+    return {
+        type: ADD_BUILDING_SUCCESS,
+        payload: data,
+    }
+};
+
+export const createBuilding = (building) => {
+    const data = {
+        id: 1,
+        name: 'BuildingName',
+        street: 'Street Name',
+        number: 'Building number',
+        code: 'Postal code',
+        city: 'City',
+        municipality: 'Municipality',
+        country: 'Country',
+        description: 'Description'  
+    }
+
+    return (dispatch) => {
+        return axios.post(url, data)
+            .then(response => {
+                const id = response.data;
+                return axios.get(`${url}/${id}`).then((response) => {
+                    dispatch(createBookSuccess(response.data));
+                }).catch(error => {
+                    throw(error);
+                });                                        
+            })
+            .catch(error => {
+                throw(error);
+            })
+    }
+}
 
 export const fetchBuildingsSuccess = (data) => {   
     return {

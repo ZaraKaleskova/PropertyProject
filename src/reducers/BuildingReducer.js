@@ -19,11 +19,15 @@ const defaultState = {
 
 const buildingReducer = (state = defaultState, action) => {
     switch(action.type) {
+        case ADD_BUILDING_SUCCESS:
+            return { ...state, buildings: [...state.buildings, action.payload]};
+        case ADD_BUILDING_ERROR: 
+            return {...state, error: action.payload};
         case FETCH_BUILDING_SUCCESS:
             return { ...state, buildings: action.payload };
         case FETCH_BUILDING_LOADING:
             return { ...state, isLoading: action.payload };
-            case FETCH_BUILDING_ERROR:
+        case FETCH_BUILDING_ERROR:
                 return { ...state, error: action.payload};
         default:
             return state;

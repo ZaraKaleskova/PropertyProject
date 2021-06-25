@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Building = ({building}) => {
+const Building = ({building, onEdit}) => {
     return (
         <tr>
         <td>{building.id}</td>

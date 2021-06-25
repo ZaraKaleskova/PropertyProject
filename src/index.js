@@ -15,8 +15,6 @@ import { createBrowserHistory } from 'history';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
-store.dispatch(fetchBuildings());
-
 export const history = createBrowserHistory({ forceRefresh: true });
 
 

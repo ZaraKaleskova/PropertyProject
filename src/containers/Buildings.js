@@ -2,10 +2,20 @@ import React, { Component } from 'react';
 import Building from '../components/Building.js';
 import { buildings } from '../data.js';
 import { connect } from 'react-redux';
+import {fetchBuildings} from '../actions/building.actions';
+import {history} from '../index';
 
 class Buildings extends Component {
     constructor(props) {
         super(props);        
+    }
+
+    componentWillMount() {
+        this.props.onFetch();
+    }
+
+    handleEdit(building) {
+
     }
 
     render() {
@@ -38,7 +48,10 @@ class Buildings extends Component {
                     {
                        this.props.buildings.map(building => {
                       return (
-                           <Building key={building.id} building={building} />
+                           <Building 
+                                key={building.id}
+                                building={building}
+                                onEdit={this.handleEdit.bind(this)} />
                             )
                         })
                     }
@@ -58,5 +71,13 @@ const mapStateToProps = (state) => {
         isLoading: state.buildingsData.isLoading,
     };
 }; 
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onFetch: () => {
+            dispatch(fetchBuildings());
+        }
+    }
+};
 
 export default connect(mapStateToProps, null)(Buildings);
