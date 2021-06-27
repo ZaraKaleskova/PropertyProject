@@ -23,6 +23,14 @@ const buildingReducer = (state = defaultState, action) => {
             return { ...state, buildings: [...state.buildings, action.payload]};
         case ADD_BUILDING_ERROR: 
             return {...state, error: action.payload};
+        case DELETE_BUILDING_SUCCESS:
+            const filteredBuildings = state.buildings.filter(building => building.id !== action.payload.id);
+            return {...state, buildings: filteredBuildings};
+        case DELETE_BUILDING_ERROR:
+            return {...state, error: action.payload};
+        case EDIT_BUILDING_SUCCESS:
+            const updatedBuildings = state.buildings.filter(building => building.id != action.payload.id);
+            return {...state, buildings: [...updatedBuildings, action.payload]};
         case FETCH_BUILDING_SUCCESS:
             return { ...state, buildings: action.payload };
         case FETCH_BUILDING_LOADING:

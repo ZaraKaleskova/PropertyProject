@@ -45,7 +45,7 @@ class App extends Component {
           />
             <Route path="/edit/:id"
                  exact
-                 component={() => <CreateBuilding />} 
+                 component={(props) => <CreateBuilding {...props} />} 
           />
         </Switch>
           </div>

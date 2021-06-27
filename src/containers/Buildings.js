@@ -3,6 +3,7 @@ import Building from '../components/Building.js';
 import { buildings } from '../data.js';
 import { connect } from 'react-redux';
 import {fetchBuildings} from '../actions/building.actions';
+import {deleteBuilding} from '../actions/building.actions';
 import {history} from '../index';
 
 class Buildings extends Component {
@@ -15,7 +16,12 @@ class Buildings extends Component {
     }
 
     handleEdit(building) {
-
+        history.push({
+            pathname: `/edit/${building.id}`,
+            state: {
+                building: building,
+            }
+        })
     }
 
     render() {
@@ -51,6 +57,7 @@ class Buildings extends Component {
                            <Building 
                                 key={building.id}
                                 building={building}
+                                onDelete={this.props.onDelete}
                                 onEdit={this.handleEdit.bind(this)} />
                             )
                         })
@@ -76,7 +83,11 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onFetch: () => {
             dispatch(fetchBuildings());
-        }
+        },
+
+        onDelete: (id) => {
+            dispatch(deleteBuilding(id))
+        },
     }
 };
 

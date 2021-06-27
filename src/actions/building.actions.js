@@ -17,69 +17,132 @@ import {history} from '../index';
 
 const url = 'http://localhost:3000/buildings';
 
-export const createBuildingSuccess = (data) => {
-    return {
-        type: ADD_BUILDING_SUCCESS,
-        payload: data,
-    }
-};
+export const createBuilding = (building) => {  
+    if (building.id) {
+        const data = {
+            ID: building.id,            
+            name: building.name,
+            street: building.street,
+            number: building.number,
+            code: building.code,
+            city: buidling.city,
+            municipality: buidling.municipality,
+            country: buidling.country,
+            description: building.description,  
+        };
 
-export const createBuildingError = (data) => {
-    return {
-        type: ADD_BUILDING_SUCCESS,
-        payload: data,
-    }
-};
+        return (dispatch) => {
+            updateBuilding(dispatch, data);
+        }
+    } else {
+        const data = {
+            name: building.name,
+            street: building.street,
+            number: building.number,
+            code: building.code,
+            city: buidling.city,
+            municipality: buidling.municipality,
+            country: buidling.country,
+            description: building.description,  
+        };
 
-export const createBuilding = (building) => {
-    const data = {
-        id: 1,
-        name: 'BuildingName',
-        street: 'Street Name',
-        number: 'Building number',
-        code: 'Postal code',
-        city: 'City',
-        municipality: 'Municipality',
-        country: 'Country',
-        description: 'Description'  
-    }
-
-    return (dispatch) => {
-        return axios.post(url, data)
-            .then(response => {
-                const id = response.data;
-                return axios.get(`${url}/${id}`).then((response) => {
-                    dispatch(createBookSuccess(response.data));
-                }).catch(error => {
+        return (dispatch) => {
+            return axios.post(url, data)
+                .then(response => {
+                    const id = response.data;
+                    return axios.get(`${url}/${id}`).then((response) => {
+                        dispatch(createBuildingSuccess(response.data));
+                    }).catch(error => {
+                        throw(error);
+                    });                                        
+                })
+                .catch(error => {
                     throw(error);
-                });                                        
-            })
-            .catch(error => {
+                })
+        }
+    }
+};
+
+export const createBuildingSuccess = (building) => {
+    return {
+        type: ADD_BUILDING_SUCCESS,
+        payload: {
+            ID: building.id,            
+            name: building.name,
+            street: building.street,
+            number: building.number,
+            code: building.code,
+            city: buidling.city,
+            municipality: buidling.municipality,
+            country: buidling.country,
+            description: building.description,  
+        }
+    }
+};
+
+export const updateBuildingSuccess = (building) => {
+    return {
+        type: EDIT_BUILDING_SUCCESS,
+        payload: {
+            ID: building.id,            
+            name: building.name,
+            street: building.street,
+            number: building.number,
+            code: building.code,
+            city: buidling.city,
+            municipality: buidling.municipality,
+            country: buidling.country,
+            description: building.description,  
+        },
+    };
+};
+
+const updateBuilding = (dispatch, data) => {
+    const id = data.ID;
+    return axios.put(url, data)
+        .then(() => {          
+            return axios.get(`${url}/${id}`).then((response) => {
+                dispatch(updateBuildingSuccess(response.data));
+            }).catch((error) => {
+                throw(error);
+            });    
+        })
+        .catch(error => {
+            throw(error);
+        });
+};
+
+export const deleteBuildingSuccess = (id) => {
+    return {
+        type: DELETE_BUILDING_SUCCESS,
+        payload: {
+            id: id,
+        }
+    }
+};
+
+export const deleteBuildingError = (data) => {
+    return {
+        type: DELETE_BUILDING_ERROR,
+        payload: data,
+    }
+}
+
+export const deleteBuilding = (id) => {
+    return (dispatch) => {
+        return axios.delete(`${url}/${id}`)
+            .then(() => {
+                dispatch(deleteBuildingSuccess(id));
+            }).catch(error => {
                 throw(error);
             })
     }
-}
-
-export const fetchBuildingsSuccess = (data) => {   
-    return {
-        type: FETCH_BUILDING_SUCCESS,
-        payload: data,
-    }
-}
-
-export const fetchBuildingsLoading = (data) => {
-    debugger;
-    return {
-        type: FETCH_BUILDING_LOADING,
-        payload: data,
-    }
 };
 
-export const fetchBuildingsError = (data) => {
-    debugger;
+export const fetchBuildings = (buildings) => {
     return {
-        type: FETCH_BUILDING_ERROR,
-        payload: data,
+        type: FETCH_BUILDING_SUCCESS,
+        payload: buildings,
     }
 }
 
@@ -98,25 +161,17 @@ const normalizeResponse = (data) => {
     return arr;
 };
 
-export const fetchBuildings = () => {
-    let isLoading = true;
-    
+export const fetchAllBuildings = () => {    
     return (dispatch) => {
-        dispatch(fetchBuildingsLoading(isLoading));
         return axios.get(url)
-        .then(response => {  
-            const data = normalizeResponse(response.data);
-            dispatch(fetchBuildingsSuccess(data));
-            isLoading = false;
-            dispatch(fetchBuildingsLoading(isLoading));
-        }).catch(error => {
-            const errorPayload = {};
-            errorPayload['message'] = error.response.data.message;
-            errorPayload['status'] = error.response.status;
-            dispatch(fetchBuildingsError(errorPayload));
-
-            isLoading = false;
-            dispatch(fetchBuildingsLoading(isLoading));
-        })
+            .then(response => {  
+                //convert attributes from uppercase to lowercase
+                const data = normalizeResponse(response.data);
+                dispatch(fetchBuildings(data));
+            }).catch(error => {
+                throw(error);
+            })
     };
-}
+};
+
+      

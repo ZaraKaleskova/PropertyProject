@@ -45,9 +45,35 @@ class CreateBuilding extends Component {
         });
     }
 
+    componentWillMount() {
+        const props = this.props;
+
+        if (props.location && props.location.state) {
+            const building = props.location.state.building;
+
+            this.setState({
+                id: building.id,
+                name: building.name,
+                street: building.street,
+                number: building.number,
+                code: building.code,
+                city: building.city,
+                municipality: building.municipality,
+                country: building.country,
+                description: building.description
+            })
+
+        }
+    }
+
     render() {
         return (
             <div className="create-building">
+                {this.props.error ?
+                    <div className="alert alert-danger" role="alert">
+                        {this.props.error.message} 
+                    </div> : ''
+                }
                 <form onSubmit={this.handleSubmit.bind(this)}>
                     <div className="form-group">
                         <input
@@ -146,7 +172,7 @@ class CreateBuilding extends Component {
 
 const mapStateToProps = (state) => {
     return {
-
+        error: state.buildingsData.error,
     };
 };
 
